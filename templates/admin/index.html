@@ -1,0 +1,179 @@
+{% extends "admin/base_site.html" %}
+{% load static %}
+{% load cms_tags %} {# Load our custom tags #}
+
+{% block title %}CMS Dashboard | {{ site_header|default:_('Django administration') }}{% endblock %}
+
+{% block branding %}
+<h1 id="site-name">
+    <a href="{% url 'admin:index' %}">
+        <img src="{% get_image_url 'admin_logo' 'admin/img/logo.svg' %}" alt="Logo" style="height: 30px; margin-right: 10px; vertical-align: middle;"> {# Example logo #}
+        Nexar Institute CMS
+    </a>
+</h1>
+{% endblock %}
+
+{% block content %}
+<div id="content-main">
+    <style>
+        /* Basic styling for the dashboard cards */
+        .dashboard-section {
+            background-color: #f8f9fa; /* Lighter grey */
+            border: 1px solid #e0e0e0; /* Softer border */
+            border-radius: 8px; /* Rounded corners */
+            padding: 20px;
+            margin-bottom: 25px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05); /* Subtle shadow */
+        }
+        .dashboard-section h2 {
+            color: #333; /* Darker heading */
+            border-bottom: 2px solid #007bff; /* Blue accent */
+            padding-bottom: 10px;
+            margin-top: 0;
+            margin-bottom: 15px;
+            font-size: 1.4em; /* Slightly larger heading */
+        }
+        .dashboard-section ul {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+        .dashboard-section li {
+            margin-bottom: 10px;
+            padding: 10px;
+            background-color: #fff; /* White background for items */
+            border-radius: 4px;
+            border: 1px solid #eee;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+         .dashboard-section li:hover {
+            background-color: #e9ecef; /* Light hover effect */
+         }
+        .dashboard-section a {
+            text-decoration: none;
+            color: #0056b3; /* Standard link blue */
+            font-weight: bold;
+            flex-grow: 1; /* Allow link text to take space */
+        }
+         .dashboard-section a:hover {
+            text-decoration: underline;
+         }
+        .dashboard-section .action-links a {
+            margin-left: 15px;
+            font-weight: normal;
+            font-size: 0.9em;
+            color: #555;
+        }
+        .dashboard-section .action-links a:hover {
+            color: #000;
+        }
+        .notification-badge {
+            background-color: #dc3545; /* Red */
+            color: white;
+            padding: 2px 6px;
+            border-radius: 10px;
+            font-size: 0.8em;
+            margin-left: 8px;
+            font-weight: bold;
+        }
+    </style>
+
+    <h1>Welcome to the Nexar Institute Content Management System</h1>
+    <p>Use the sections below to manage website content, programs, applications, and messages.</p>
+
+    <div class="dashboard-grid" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 20px;">
+
+        <div class="dashboard-section">
+            <h2>Mailbox</h2>
+            <ul>
+                <li>
+                    {% get_unread_message_count as unread_count %}
+                    <a href="{% get_admin_url 'contact.ContactMessage' %}">
+                        Contact Form Messages
+                        {% if unread_count > 0 %}
+                            <span class="notification-badge">{{ unread_count }} New</span>
+                        {% endif %}
+                    </a>
+                    <span class="action-links">
+                        <a href="{% get_admin_url 'contact.ContactMessage' %}">View All</a>
+                    </span>
+                </li>
+                </ul>
+        </div>
+
+        <div class="dashboard-section">
+            <h2>Website Content</h2>
+            <ul>
+                <li>
+                    <a href="{% get_admin_url 'cms.PageContent' %}">Manage Page Content (Banners, Text)</a>
+                    <span class="action-links">
+                        <a href="{% url 'admin:cms_pagecontent_add' %}">Add New</a> |
+                        <a href="{% get_admin_url 'cms.PageContent' %}">View All</a>
+                    </span>
+                </li>
+                </ul>
+        </div>
+
+        <div class="dashboard-section">
+            <h2>Academic Programs</h2>
+            <ul>
+                <li>
+                    <a href="{% get_admin_url 'programs.Program' %}">Manage Programs</a>
+                     <span class="action-links">
+                        <a href="{% url 'admin:programs_program_add' %}">Add New</a> |
+                        <a href="{% get_admin_url 'programs.Program' %}">View All</a>
+                    </span>
+                </li>
+                <li>
+                    <a href="{% get_admin_url 'programs.ProgramCategory' %}">Manage Program Categories</a>
+                     <span class="action-links">
+                        <a href="{% url 'admin:programs_programcategory_add' %}">Add New</a> |
+                        <a href="{% get_admin_url 'programs.ProgramCategory' %}">View All</a>
+                    </span>
+                </li>
+            </ul>
+        </div>
+
+        <div class="dashboard-section">
+            <h2>Admissions & Applications</h2>
+            <ul>
+                <li>
+                    <a href="{% get_admin_url 'admissions.ApplicationSubmission' %}">View Application Submissions</a>
+                     <span class="action-links">
+                        <a href="{% get_admin_url 'admissions.ApplicationSubmission' %}">View All</a>
+                    </span>
+                </li>
+                <li>
+                    <a href="{% get_admin_url 'admissions.ApplicationFormField' %}">Manage Application Form Fields</a>
+                     <span class="action-links">
+                        <a href="{% url 'admin:admissions_applicationformfield_add' %}">Add New</a> |
+                        <a href="{% get_admin_url 'admissions.ApplicationFormField' %}">View All</a>
+                    </span>
+                </li>
+            </ul>
+        </div>
+
+        <div class="dashboard-section">
+            <h2>User Management</h2>
+            <ul>
+                <li>
+                    <a href="{% get_admin_url 'auth.User' %}">Manage Users</a>
+                     <span class="action-links">
+                        <a href="{% url 'admin:auth_user_add' %}">Add New</a> |
+                        <a href="{% get_admin_url 'auth.User' %}">View All</a>
+                    </span>
+                </li>
+                 <li>
+                    <a href="{% get_admin_url 'auth.Group' %}">Manage Groups</a>
+                     <span class="action-links">
+                        <a href="{% url 'admin:auth_group_add' %}">Add New</a> |
+                        <a href="{% get_admin_url 'auth.Group' %}">View All</a>
+                    </span>
+                </li>
+            </ul>
+        </div>
+
+    </div>
+    {% endblock %}

@@ -24,6 +24,7 @@ INSTALLED_APPS = [
     'programs.apps.ProgramsConfig',
     'admissions.apps.AdmissionsConfig',
     'contact.apps.ContactConfig',
+    'cms.apps.CmsConfig',
     'whitenoise.runserver_nostatic',
 ]
 
@@ -53,6 +54,7 @@ TEMPLATES = [
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
             ],
+            'libraries':{'cms_tags': 'cms.templatetags.cms_tags',}
         },
     },
 ]

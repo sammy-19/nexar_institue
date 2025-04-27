@@ -1,0 +1,53 @@
+{% extends "base.html" %}
+
+{% block title %}{{ page_title }}{% endblock %}
+
+{% block content %}
+<div class="bg-white p-6 sm:p-8 rounded-lg shadow-md max-w-3xl mx-auto">
+    <h1 class="text-2xl sm:text-3xl font-bold text-blue-700 mb-6">{{ page_title }}</h1>
+
+    <p class="text-gray-700 mb-6">
+        Please fill out the form below to apply for admission to Nexar Institute. Fields marked with * are required.
+    </p>
+
+    <form method="post" enctype="multipart/form-data" novalidate>
+        {% csrf_token %}
+
+        {% if form.non_field_errors %}
+            <div class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative mb-4" role="alert">
+                {% for error in form.non_field_errors %}
+                    <p>{{ error }}</p>
+                {% endfor %}
+            </div>
+        {% endif %}
+
+        {% for field in form %}
+            <div class="mb-5">
+                <label for="{{ field.id_for_label }}" class="block text-sm font-medium text-gray-700 mb-1">
+                    {{ field.label }}
+                    {# Required logic adjusted slightly in form for file fields #}
+                    {% if field.field.required and field.field.widget.input_type != 'checkbox' %}
+                         <span class="text-red-600">*</span>
+                    {% endif %}
+                </label>
+
+                {# Render field #}
+                {{ field }}
+
+                {% if field.help_text %}
+                    <p class="mt-1 text-xs text-gray-500">{{ field.help_text }}</p>
+                {% endif %}
+                {% if field.errors %}
+                    <p class="text-red-600 text-xs italic mt-1">{{ field.errors|first }}</p>
+                {% endif %}
+            </div>
+        {% endfor %}
+
+        <div class="mt-8">
+            <button type="submit" class="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-4 rounded-lg transition duration-300 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-50">
+                Submit Application
+            </button>
+        </div>
+    </form>
+</div>
+{% endblock %}

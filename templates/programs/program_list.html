@@ -1,46 +1,54 @@
 {% extends "base.html" %}
-{% load static %}
+{% load cms_tags %} {# Load the custom template tags #}
+{% load static %} {# Keep static for fallback if needed #}
 
 {% block title %}{{ page_title }}{% endblock %}
 
 {% block content %}
-<div class="bg-white p-8 rounded-lg shadow-md">
-    <h1 class="text-3xl font-bold text-blue-700 mb-6">{{ page_title }}</h1>
-    <img src="{% static 'images/programs.png' %}" alt="Programs Banner" class="w-full h-48 sm:h-64 object-cover rounded-lg mb-6">
 
-    <div class="mb-6">
-        <span class="mr-4 font-semibold">Filter by Category:</span>
-        <a href="{% url 'programs:program_list' %}" class="{% if not current_category %}font-bold text-blue-600{% else %}text-gray-600 hover:text-blue-600{% endif %} mr-3">All</a>
-        {% for category in categories %}
-            <a href="{% url 'programs:program_list_by_category' category.slug %}"
-               class="{% if current_category == category %}font-bold text-blue-600{% else %}text-gray-600 hover:text-blue-600{% endif %} mr-3">
-                {{ category.name }}
-            </a>
-        {% endfor %}
+<img src="{% static 'images/programs.png' %}"
+     alt="Programs Banner" class="w-full h-48 sm:h-64 object-cover rounded-lg mb-6"
+     onerror="this.onerror=null; this.src='https://placehold.co/1200x300/cccccc/666666?text=Programs+Banner+Not+Found';"> {# Basic JS fallback #}
+
+
+<div class="bg-white p-6 sm:p-8 rounded-lg shadow-md">
+    <h1 class="text-2xl sm:text-3xl font-bold text-blue-700 mb-6">{{ page_title }}</h1>
+
+    <div class="mb-6 flex flex-wrap items-center gap-x-4 gap-y-2">
+        <span class="font-semibold shrink-0">Filter by Category:</span>
+        <div class="flex flex-wrap gap-x-3 gap-y-1">
+            <a href="{% url 'programs:program_list' %}" class="{% if not current_category %}font-bold text-blue-600{% else %}text-gray-600 hover:text-blue-600{% endif %}">All</a>
+            {% for category in categories %}
+                <a href="{% url 'programs:program_list_by_category' category.slug %}"
+                   class="{% if current_category == category %}font-bold text-blue-600{% else %}text-gray-600 hover:text-blue-600{% endif %}">
+                    {{ category.name }}
+                </a>
+            {% endfor %}
+        </div>
     </div>
 
     {% if current_category %}
-        <h2 class="text-2xl font-semibold text-gray-800 mb-4">{{ current_category.name }}</h2>
+        <h2 class="text-xl sm:text-2xl font-semibold text-gray-800 mb-4">{{ current_category.name }}</h2>
     {% endif %}
 
     {% regroup programs by category as programs_by_category %}
 
     {% for group in programs_by_category %}
         {% if not current_category %} {# Only show category title if not filtering #}
-            <h2 class="text-2xl font-semibold text-gray-800 mt-6 mb-4">{{ group.grouper.name }}</h2>
+            <h2 class="text-xl sm:text-2xl font-semibold text-gray-800 mt-6 mb-4">{{ group.grouper.name }}</h2>
         {% endif %}
-        <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
             {% for program in group.list %}
-                <div class="border border-gray-200 rounded-lg p-4 hover:shadow-lg transition duration-200">
-                    <h3 class="text-xl font-semibold text-blue-700 mb-2">{{ program.title }}</h3>
+                <div class="border border-gray-200 rounded-lg p-4 hover:shadow-lg transition duration-200 flex flex-col">
+                    <h3 class="text-lg font-semibold text-blue-700 mb-2">{{ program.title }}</h3>
                     <p class="text-sm text-gray-600 mb-2">Duration: {{ program.duration }}</p>
-                    <p class="text-gray-700 mb-4 text-sm">
+                    <p class="text-gray-700 mb-4 text-sm flex-grow">
                          {{ program.description|truncatewords:20 }} {# Show short description #}
                     </p>
-                    <a href="{{ program.get_absolute_url }}" class="text-blue-600 hover:underline font-medium">Learn More &rarr;</a>
+                    <a href="{{ program.get_absolute_url }}" class="text-blue-600 hover:underline font-medium self-start mt-auto">Learn More →</a>
                 </div>
             {% empty %}
-                 <p class="text-gray-600">No programs found {% if current_category %} in this category{% endif %}.</p>
+                 <p class="text-gray-600 sm:col-span-2 lg:col-span-3">No programs found {% if current_category %} in this category{% endif %}.</p>
             {% endfor %}
         </div>
      {% empty %}
