@@ -1,0 +1,55 @@
+{% extends "base.html" %}
+{% load static %}
+{% block title %}{{ page_title }}{% endblock %}
+{% block content %}
+    <div class="bg-white p-6 sm:p-8 rounded-lg shadow-md">
+        <h1 class="text-2xl sm:text-3xl font-bold text-blue-700 mb-6">{{ page_title }}</h1>
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-8 md:gap-12">
+            <div>
+                <h2 class="text-xl sm:text-2xl font-semibold text-gray-800 mb-4">Get in Touch</h2>
+                    <img src="{% static 'images/about_location.png' %}" alt="Nexar Institute Location" class="w-full h-48 sm:h-64 object-cover rounded-lg mb-4">
+                <p class="text-gray-700 mb-6 leading-relaxed">We'd love to hear from you! Whether you have questions about our programs, admissions, or partnerships, feel free to reach out using the details below or the contact form.</p>
+                <div class="space-y-4 text-gray-700">
+                    <p><strong>Address:</strong><br>{{ address }}</p><p><strong>Email:</strong><br><a href="mailto:{{ email }}" class="text-blue-600 hover:underline">{{ email }}</a></p>
+                    <p><strong>Phone:</strong><br><a href="tel:{{ phone }}" class="text-blue-600 hover:underline">{{ phone }}</a></p>
+                    <p><strong>Postal Address:</strong><br>{{ po_box }}</p>
+                </div>
+            </div>
+            <div>
+                <h2 class="text-xl sm:text-2xl font-semibold text-gray-800 mb-4">Send Us a Message</h2>
+                <form method="post" novalidate>
+                    {% csrf_token %}{% if form.non_field_errors %}
+                    <div class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative mb-4" role="alert">
+                        {% for error in form.non_field_errors %}
+                            <p>{{ error }}</p>
+                        {% endfor %}
+                    </div>{% endif %}
+                    <div class="mb-4">
+                        <label for="{{ form.name.id_for_label }}" class="block text-sm font-medium text-gray-700">Name</label>
+                        {{ form.name }}{% if form.name.errors %}
+                            <p class="text-red-600 text-xs italic mt-1">{{ form.name.errors|first }}</p>
+                        {% endif %}
+                    </div>
+                    <div class="mb-4">
+                        <label for="{{ form.email.id_for_label }}" class="block text-sm font-medium text-gray-700">Email</label>
+                            {{ form.email }}{% if form.email.errors %}
+                        <p class="text-red-600 text-xs italic mt-1">{{ form.email.errors|first }}</p>
+                        {% endif %}
+                    </div>
+                    <div class="mb-4">
+                        <label for="{{ form.subject.id_for_label }}" class="block text-sm font-medium text-gray-700">Subject</label>
+                        {{ form.subject }}
+                        {% if form.subject.errors %}
+                            <p class="text-red-600 text-xs italic mt-1">{{ form.subject.errors|first }}</p>
+                        {% endif %}</div><div class="mb-4"><label for="{{ form.message.id_for_label }}" class="block text-sm font-medium text-gray-700">Message</label>
+                            {{ form.message }}{% if form.message.errors %}
+                            <p class="text-red-600 text-xs italic mt-1">{{ form.message.errors|first }}</p>{% endif %}
+                        </div>
+                        <div>
+                            <button type="submit" class="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-lg transition duration-300 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-50">Send Message</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+        {% endblock %}

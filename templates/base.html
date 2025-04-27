@@ -1,0 +1,147 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Nexar Institute{% endblock %} | Nexar Institute of Health Sciences</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'], // Ensure Inter font is loaded or use system default
+                    },
+                }
+            }
+        }
+    </script>
+    <link rel="icon" type="image/x-icon" href="{% static 'images/logo.png' %}">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+    {# <link rel="stylesheet" href="{% static 'css/custom.css' %}"> #}
+    <style>
+        body { font-family: 'Inter', sans-serif; }
+        /* Add smooth transition for mobile menu */
+        #mobile-menu { transition: max-height 0.3s ease-out; }
+    </style>
+</head>
+<body class="bg-gray-100 text-gray-800">
+
+    <header class="bg-white shadow-md sticky top-0 z-50">
+        <nav class="container mx-auto px-4 sm:px-6 py-3">
+            <div class="flex justify-between items-center">
+                <div>
+                    <img src="{% static 'images/logo.png' %}" alt="Nexar Institute Logo" class="h-10 sm:h-12 w-auto max-w-[150px] sm:max-w-[200px] object-contain">
+                    <a href="{% url 'core:home' %}" class="text-xl font-bold text-blue-700 hover:text-blue-900">
+                        Nexar Institute
+                    </a>
+                    <span class="text-xs sm:text-sm text-gray-600 ml-1 sm:ml-2 hidden sm:inline">of Health Sciences & Business Studies</span>
+                </div>
+
+                <div class="hidden md:block">
+                    <ul class="flex space-x-4">
+                        <li><a href="{% url 'core:home' %}" class="text-gray-700 hover:text-blue-600 px-3 py-2 rounded-md text-sm font-medium">Home</a></li>
+                        <li><a href="{% url 'core:about' %}" class="text-gray-700 hover:text-blue-600 px-3 py-2 rounded-md text-sm font-medium">About</a></li>
+                        <li><a href="{% url 'core:mission_vision' %}" class="text-gray-700 hover:text-blue-600 px-3 py-2 rounded-md text-sm font-medium">Mission/Vision</a></li>
+                        <li><a href="{% url 'programs:program_list' %}" class="text-gray-700 hover:text-blue-600 px-3 py-2 rounded-md text-sm font-medium">Programs</a></li>
+                        <li><a href="{% url 'admissions:info' %}" class="text-gray-700 hover:text-blue-600 px-3 py-2 rounded-md text-sm font-medium">Admissions</a></li>
+                        <li><a href="{% url 'contact:contact_page' %}" class="text-gray-700 hover:text-blue-600 px-3 py-2 rounded-md text-sm font-medium">Contact</a></li>
+                    </ul>
+                </div>
+
+                <div class="md:hidden flex items-center">
+                    <button id="mobile-menu-button" class="inline-flex items-center justify-center p-2 rounded-md text-gray-400 hover:text-gray-500 hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-blue-500" aria-controls="mobile-menu" aria-expanded="false">
+                        <span class="sr-only">Open main menu</span>
+                        <svg class="block h-6 w-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
+                        </svg>
+                        <svg class="hidden h-6 w-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+                        </svg>
+                    </button>
+                </div>
+            </div>
+
+            <div class="md:hidden hidden overflow-hidden max-h-0" id="mobile-menu">
+                <ul class="pt-2 pb-3 space-y-1 sm:px-3">
+                    <li><a href="{% url 'core:home' %}" class="text-gray-700 hover:bg-gray-50 hover:text-blue-600 block px-3 py-2 rounded-md text-base font-medium">Home</a></li>
+                    <li><a href="{% url 'core:about' %}" class="text-gray-700 hover:bg-gray-50 hover:text-blue-600 block px-3 py-2 rounded-md text-base font-medium">About</a></li>
+                    <li><a href="{% url 'core:mission_vision' %}" class="text-gray-700 hover:bg-gray-50 hover:text-blue-600 block px-3 py-2 rounded-md text-base font-medium">Mission/Vision</a></li>
+                    <li><a href="{% url 'programs:program_list' %}" class="text-gray-700 hover:bg-gray-50 hover:text-blue-600 block px-3 py-2 rounded-md text-base font-medium">Programs</a></li>
+                    <li><a href="{% url 'admissions:info' %}" class="text-gray-700 hover:bg-gray-50 hover:text-blue-600 block px-3 py-2 rounded-md text-base font-medium">Admissions</a></li>
+                    <li><a href="{% url 'contact:contact_page' %}" class="text-gray-700 hover:bg-gray-50 hover:text-blue-600 block px-3 py-2 rounded-md text-base font-medium">Contact</a></li>
+                </ul>
+            </div>
+        </nav>
+    </header>
+
+    <main class="container mx-auto px-4 sm:px-6 py-8">
+        {% if messages %}
+            <div class="mb-4">
+                {% for message in messages %}
+                    <div class="p-4 rounded-md {% if message.tags == 'success' %}bg-green-100 text-green-800{% elif message.tags == 'error' %}bg-red-100 text-red-800{% else %}bg-blue-100 text-blue-800{% endif %}" role="alert">
+                        {{ message }}
+                    </div>
+                {% endfor %}
+            </div>
+        {% endif %}
+
+        {% block content %}
+        {% endblock %}
+    </main>
+
+    <footer class="bg-gray-800 text-gray-300 mt-12 py-8">
+        <div class="container mx-auto px-4 sm:px-6 text-center">
+            <p>© {% now "Y" %} Nexar Institute of Health Sciences and Business Studies. All rights reserved.</p>
+            <p class="mt-2 text-sm">
+                Ninth Floor Kulima Tower Building, Katunjila Road, Lusaka, Zambia |
+                Email: nexarschool@gmail.com | Phone: +260767814141
+            </p>
+        </div>
+    </footer>
+
+    <script>
+        const btn = document.getElementById('mobile-menu-button');
+        const menu = document.getElementById('mobile-menu');
+        const hamburgerIcon = btn.querySelector('svg:first-child'); // Selects the hamburger icon
+        const closeIcon = btn.querySelector('svg:last-child'); // Selects the close icon
+
+        btn.addEventListener('click', () => {
+            const isExpanded = btn.getAttribute('aria-expanded') === 'true';
+            btn.setAttribute('aria-expanded', !isExpanded);
+            menu.classList.toggle('hidden');
+
+            // Animate max-height for smooth toggle
+             if (!isExpanded) {
+                // Expanding: set max-height to its scroll height
+                menu.style.maxHeight = menu.scrollHeight + "px";
+             } else {
+                 // Collapsing: set max-height back to 0
+                 menu.style.maxHeight = "0px";
+             }
+
+            // Toggle icons
+            hamburgerIcon.classList.toggle('hidden');
+            hamburgerIcon.classList.toggle('block');
+            closeIcon.classList.toggle('hidden');
+            closeIcon.classList.toggle('block');
+        });
+
+        // Optional: Close menu if window is resized to desktop width
+        window.addEventListener('resize', () => {
+            if (window.innerWidth >= 768) { // Tailwind's 'md' breakpoint
+                 if (btn.getAttribute('aria-expanded') === 'true') {
+                    btn.click(); // Simulate click to close menu and reset state
+                 }
+            }
+        });
+    </script>
+
+    {% block extra_js %}
+    {% endblock %}
+</body>
+</html>

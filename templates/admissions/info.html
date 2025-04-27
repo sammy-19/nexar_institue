@@ -1,0 +1,44 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}{{ page_title }}{% endblock %}
+
+{% block content %}
+<div class="bg-white p-8 rounded-lg shadow-md">
+    <h1 class="text-3xl font-bold text-blue-700 mb-6">{{ page_title }}</h1>
+    <img src="{% static 'images/admissions_banner.png' %}" alt="Admissions Banner" class="w-full h-48 sm:h-64 object-cover rounded-lg mb-6">
+
+    <section class="mb-8">
+        <h2 class="text-2xl font-semibold text-gray-800 mb-3">Enrollment Process</h2>
+        <p class="text-gray-700 leading-relaxed">
+            {{ enrollment_process }}
+            During orientation, students gain insight into Nexar's mission, vision, and distinctive educational approach. This initial phase also provides students with valuable guidance regarding the selection of their specific program of study.
+        </p>
+    </section>
+
+    <section class="mb-8">
+        <h2 class="text-2xl font-semibold text-gray-800 mb-3">Who Should Apply?</h2>
+        <p class="text-gray-700 leading-relaxed">
+            {{ target_market }}
+            We also welcome diploma holders eager to upgrade their qualifications. We are committed to making quality education accessible to students from diverse backgrounds, including those in provincial towns.
+        </p>
+    </section>
+
+    <section class="mb-8">
+        <h2 class="text-2xl font-semibold text-gray-800 mb-3">Our Approach to Assessment</h2>
+        <p class="text-gray-700 leading-relaxed">
+            Nexar places a strong emphasis on assessing students based on their innovation, practical skills, and the tangible outcomes and impact of their educational journey. This ensures graduates are prepared to address real-world challenges effectively through internships, fieldwork, and practical projects.
+        </p>
+    </section>
+
+    <section>
+         <h2 class="text-2xl font-semibold text-gray-800 mb-3">Ready to Apply?</h2>
+         <p class="text-gray-700 leading-relaxed mb-4">
+            Contact our admissions office for application forms and further details.
+         </p>
+         <a href="{% url 'contact:contact_page' %}" class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-lg transition duration-300 inline-block">
+            Contact Admissions
+        </a>
+    </section>
+</div>
+{% endblock %}

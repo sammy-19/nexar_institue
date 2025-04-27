@@ -1,0 +1,33 @@
+{% extends "base.html" %}
+
+{% block title %}{{ page_title }}{% endblock %}
+
+{% block content %}
+<div class="bg-white p-8 rounded-lg shadow-md">
+    <h1 class="text-3xl font-bold text-blue-700 mb-6">{{ page_title }}</h1>
+
+    <section class="mb-8">
+        <h2 class="text-2xl font-semibold text-gray-800 mb-3">Background</h2>
+        <p class="text-gray-700 leading-relaxed">
+            {{ background }}
+            Our institute is driven by a dedicated group of young graduates who share a vision of enhancing efficiency and ethics in Zambia's healthcare and business sectors. We are committed to empowering the youth by offering employment opportunities and promoting knowledge transfer. With a focus on equitable development, we're expanding our reach to provincial towns, making quality education accessible. Our comprehensive curriculum equips graduates with practical skills and academic excellence.
+        </p>
+    </section>
+
+    <section class="mb-8">
+        <h2 class="text-2xl font-semibold text-gray-800 mb-3">Our Objectives</h2>
+        <ul class="list-disc list-inside space-y-2 text-gray-700">
+            {% for objective in objectives %}
+                <li>{{ objective }}</li>
+            {% endfor %}
+        </ul>
+    </section>
+
+    <section>
+        <h2 class="text-2xl font-semibold text-gray-800 mb-3">Our Commitment</h2>
+        <p class="text-gray-700 leading-relaxed">
+            We are committed to ethics, innovation, and inclusion. We offer a unique blend of academic rigor and practical experience, preparing graduates for success and contributing to Zambia's sustainable growth and development. We focus on bridging the skills gap and fostering entrepreneurship.
+        </p>
+    </section>
+</div>
+{% endblock %}
