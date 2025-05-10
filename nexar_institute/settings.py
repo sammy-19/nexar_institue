@@ -1,13 +1,18 @@
 from pathlib import Path
-import os # Import os module
+import os
+import dotenv
+import cloudinary
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
+dotenv_path = BASE_DIR / '.env'
+dotenv.load_dotenv(dotenv_path=dotenv_path)
+
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = 'django-insecure-@t(8lihjd2taq2cfkx5cjdzhazvl#en5-!1-@pge#(ptt+zta$'
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = os.getenv('DEBUG')
 
 ALLOWED_HOSTS = []
 
@@ -26,6 +31,7 @@ INSTALLED_APPS = [
     'contact.apps.ContactConfig',
     'cms.apps.CmsConfig',
     'whitenoise.runserver_nostatic',
+    'cloudinary',
 ]
 
 MIDDLEWARE = [
@@ -63,13 +69,26 @@ WSGI_APPLICATION = 'nexar_institute.wsgi.application'
 
 # Database
 # https://docs.djangoproject.com/en/stable/ref/settings/#databases
+
+DATABASES = {
+    'default': {
+        'ENGINE': 'django.db.backends.mysql',
+        # Use os.getenv to read from environment variables
+        'NAME': os.getenv('DB_NAME'),
+        'USER': os.getenv('DB_USER'),
+        'PASSWORD': os.getenv('DB_PASSWORD'),
+        'HOST': os.getenv('DB_HOST'),
+        'PORT': os.getenv('DB_PORT'),
+    }
+}
+"""
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.sqlite3',
         'NAME': BASE_DIR / 'db.sqlite3',
     }
 }
-
+"""
 # Password validation
 # https://docs.djangoproject.com/en/stable/ref/settings/#auth-password-validators
 AUTH_PASSWORD_VALIDATORS = [
@@ -96,9 +115,22 @@ USE_TZ = True
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/stable/howto/static-files/
+
+# Cloudinary Configuration
+# ========================
+# cloudinary.config(
+#   cloud_name = os.getenv('CLOUDINARY_CLOUD_NAME'),
+#   api_key = os.getenv('CLOUDINARY_API_KEY'),
+#   api_secret = os.getenv('CLOUDINARY_API_SECRET'),
+#   secure = True 
+# )
+# ========================
+
+
+# Static files settings (Keep your Whitenoise setup)
 STATIC_URL = 'static/'
 STATICFILES_DIRS = [os.path.join(BASE_DIR, 'static')]
-STATIC_ROOT = BASE_DIR / "staticfiles"
+STATIC_ROOT = BASE_DIR / "staticfiles_build"
 
 # Static files settings (Keep your Whitenoise setup)
 STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
