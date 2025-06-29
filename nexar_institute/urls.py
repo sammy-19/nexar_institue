@@ -31,5 +31,7 @@ urlpatterns = [
 
 
 if settings.DEBUG:
-    urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+    if settings.DEFAULT_FILE_STORAGE != 'cloudinary_storage.storage.MediaCloudinaryStorage':
+        urlpatterns += static(settings.MEDIA_URL or '/media/', document_root=settings.MEDIA_ROOT)
+
     urlpatterns += static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)

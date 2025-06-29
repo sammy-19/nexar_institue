@@ -1,7 +1,6 @@
 from pathlib import Path
 import os
 import dotenv
-import dj_database_url
 import cloudinary
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -11,9 +10,10 @@ dotenv_path = BASE_DIR / '.env'
 dotenv.load_dotenv(dotenv_path=dotenv_path)
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-@t(8lihjd2taq2cfkx5cjdzhazvl#en5-!1-@pge#(ptt+zta$'
+SECRET_KEY = os.getenv('SECRET_KEY', 'fallback-secret-key')
+
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = os.getenv('DEBUG')
+DEBUG = os.getenv('DEBUG', 'False') == 'True'
 
 ALLOWED_HOSTS = ["127.0.0.1", ".vercel.app", ".now.sh"]
 
@@ -73,9 +73,18 @@ WSGI_APPLICATION = 'nexar_institute.wsgi.application'
 # https://docs.djangoproject.com/en/stable/ref/settings/#databases
 
 DATABASES = {
-    'default': dj_database_url.config(
-        default=os.getenv('DATABASE_URL')
-    )
+    'default': {
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': os.getenv('PGDATABASE'),
+        'USER': os.getenv('PGUSER'),
+        'PASSWORD': os.getenv('PGPASSWORD'),
+        'HOST': os.getenv('PGHOST'),
+        'PORT': os.getenv('PGPORT', '5432'),
+        'OPTIONS': {
+            'sslmode': os.getenv('PGSSLMODE', 'require'),
+            'channel_binding': os.getenv('PGCHANNELBINDING', 'require'),
+        }
+    }
 }
 
 """
