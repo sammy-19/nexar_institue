@@ -85,55 +85,29 @@ class DynamicApplicationForm(forms.Form):
                     widget=forms.ClearableFileInput(attrs=file_attrs) # Allows clearing
                 )
 
-    def save(self, files_data=None): # Accept files data
-        """Saves the form data into ApplicationSubmission and ApplicationSubmissionData."""
-        if not self.is_valid():
-            raise ValueError("Form is not valid, cannot save.")
-
+    def save(self, files_data=None):
+        if not self.is_valid(): raise ValueError("Form is not valid, cannot save.")
         cleaned_data = self.cleaned_data
-
-        # Create the main submission record
-        applicant_name = cleaned_data.get('full_name', '')
-        applicant_email = cleaned_data.get('email_address', '')
-        submission = ApplicationSubmission.objects.create(
-            applicant_name=applicant_name,
-            applicant_email=applicant_email
-        )
-
-        # Get field definitions again to link data correctly
+        applicant_name = cleaned_data.get('full_name', ''); applicant_email = cleaned_data.get('email_address', '')
+        submission = ApplicationSubmission.objects.create(applicant_name=applicant_name, applicant_email=applicant_email)
         fields_map = {f.field_name: f for f in ApplicationFormField.objects.filter(is_active=True)}
-
         data_to_create = []
         for field_name, value in cleaned_data.items():
             if field_name in fields_map:
-                field_model = fields_map[field_name]
-                value_to_save = ""
-
-                # --- Handle File/Image Uploads ---
+                field_model = fields_map[field_name]; value_to_save = ""
                 if field_model.field_type in ['file', 'image'] and files_data and field_name in files_data:
                     uploaded_file = files_data[field_name]
-                    # Define a path within MEDIA_ROOT
-                    # Example: media/application_files/submission_<id>/<filename>
-                    file_dir = os.path.join('application_files', f'submission_{submission.id}')
-                    file_path = os.path.join(file_dir, uploaded_file.name)
-                    # Save the file using default storage
-                    saved_path = default_storage.save(file_path, uploaded_file)
-                    # Store the relative path (URL) in the value field
-                    value_to_save = default_storage.url(saved_path) # Get URL path
-                    # Or store relative path from MEDIA_ROOT: value_to_save = saved_path
-                elif value is not None: # Handle non-file fields
-                    # Convert value to string for TextField storage
-                    value_to_save = ', '.join(value) if isinstance(value, list) else str(value)
-
-                if value_to_save: # Only save if there's a value or a file was uploaded
-                    data_to_create.append(
-                        ApplicationSubmissionData(
-                            submission=submission,
-                            field=field_model,
-                            value=value_to_save
-                        )
-                    )
-
+                    # The 'upload_to' path in the model field or this constructed path will be used by
+                    # cloudinary_storage as the public_id (folder structure) in Cloudinary.
+                    # For ApplicationFormField, it doesn't have an `upload_to` directly.
+                    # We can construct a path, e.g., application_files/submission_id/field_name/filename
+                    # Cloudinary might prefix this with MEDIA_URL if settings.CLOUDINARY_STORAGE['PREFIX'] is set.
+                    file_path = os.path.join('application_files', f'submission_{submission.id}', field_model.field_name, uploaded_file.name)
+                    saved_path_or_public_id = default_storage.save(file_path, uploaded_file)
+                    value_to_save = default_storage.url(saved_path_or_public_id) # This will be a Cloudinary URL
+                elif value is not None: value_to_save = ', '.join(value) if isinstance(value, list) else str(value)
+                if value_to_save: data_to_create.append(ApplicationSubmissionData(submission=submission, field=field_model, value=value_to_save))
+        
         if data_to_create:
             ApplicationSubmissionData.objects.bulk_create(data_to_create)
         return submission
