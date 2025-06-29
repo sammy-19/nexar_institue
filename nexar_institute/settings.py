@@ -1,6 +1,7 @@
 from pathlib import Path
 import os
 import dotenv
+import dj_database_url
 import cloudinary
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -32,6 +33,7 @@ INSTALLED_APPS = [
     'cms.apps.CmsConfig',
     'whitenoise.runserver_nostatic',
     'cloudinary',
+    'cloudinary_storage', 
 ]
 
 MIDDLEWARE = [
@@ -71,6 +73,14 @@ WSGI_APPLICATION = 'nexar_institute.wsgi.application'
 # https://docs.djangoproject.com/en/stable/ref/settings/#databases
 
 DATABASES = {
+    'default': dj_database_url.config(
+        default=os.getenv('DATABASE_URL')
+    )
+}
+
+"""
+MySQL Database
+DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
         # Use os.getenv to read from environment variables
@@ -81,7 +91,8 @@ DATABASES = {
         'PORT': os.getenv('DB_PORT'),
     }
 }
-"""
+
+SQL Database
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.sqlite3',
@@ -118,14 +129,13 @@ USE_TZ = True
 
 # Cloudinary Configuration
 # ========================
-# cloudinary.config(
-#   cloud_name = os.getenv('CLOUDINARY_CLOUD_NAME'),
-#   api_key = os.getenv('CLOUDINARY_API_KEY'),
-#   api_secret = os.getenv('CLOUDINARY_API_SECRET'),
-#   secure = True 
-# )
-# ========================
-
+cloudinary.config(
+  cloud_name = os.getenv('CLOUDINARY_CLOUD_NAME'),
+  api_key = os.getenv('CLOUDINARY_API_KEY'),
+  api_secret = os.getenv('CLOUDINARY_API_SECRET'),
+  secure = True 
+)
+DEFAULT_FILE_STORAGE = 'cloudinary_storage.storage.MediaCloudinaryStorage'
 
 # Static files settings (Keep your Whitenoise setup)
 STATIC_URL = 'static/'
