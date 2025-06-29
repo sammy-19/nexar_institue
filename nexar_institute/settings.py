@@ -87,8 +87,24 @@ DATABASES = {
     }
 }
 
+import psycopg2
+try:
+    conn = psycopg2.connect(
+        dbname=os.getenv('PGDATABASE'),
+        user=os.getenv('PGUSER'),
+        password=os.getenv('PGPASSWORD'),
+        host=os.getenv('PGHOST'),
+        port=os.getenv('PGPORT', '5432'),
+        sslmode=os.getenv('PGSSLMODE', 'require'),
+        #options='-c channel_binding=require'
+    )
+    conn.close()
+except Exception as e:
+    print("❌ DATABASE CONNECTION FAILED:", e)
+
 """
-MySQL Database
+
+# MySQL Database
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
@@ -100,6 +116,7 @@ DATABASES = {
         'PORT': os.getenv('DB_PORT'),
     }
 }
+
 
 SQL Database
 DATABASES = {
